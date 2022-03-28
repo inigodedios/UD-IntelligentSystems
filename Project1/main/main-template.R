@@ -1,6 +1,6 @@
 # =======================================================================
-# Group Name:
-# Students:
+# Group Name: Group 15
+# Students: Iñigo de Dios, Alexandru Gabriel Nitu
 # =======================================================================
 
 # Clear environment and console
@@ -22,12 +22,13 @@ source("../algorithms/blind/depth-limited-search.R")
 source("../algorithms/blind/iterative-deepening-search.R")
 source("../algorithms/informed/greedy-best-first-search.R")
 source("../algorithms/informed/uniform-cost-search.R")
+source("../problem/problem-template.R")
 
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
 
 # ADD YOUR CODE HERE TO INITIALIZE YOUR PROBLEM AND INCLUDE PROBLEM DEFINITION FILE
-problem <- initialize.problem() 
+problem <- initialize.problem("../data/feet-maze-1a.txt") 
 
 bfs_ts <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000)   
 bfs_gs <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000, graph_search = TRUE)
