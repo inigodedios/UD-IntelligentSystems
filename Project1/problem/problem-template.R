@@ -18,58 +18,112 @@ initialize.problem <- function(file) {
   problem$table               <- read.csv(file, sep=";", header = FALSE, skip=1, nrows=problem$size[1])
   problem$initial_state       <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[1])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[2]+1)) # Buscamos la posición de la fila en la que se encuentra el estado, y al número correspondiente le sumamos uno, ya que los vectores en R comienzan por 1 
   problem$final_state         <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[1])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[2]+1)) # Hacemos la misma operiación que para el estado inicial, pero una fila más abajo
-  problem$actions             <- data.frame(left = 0, right = 0, down = 0, top = 0)
-  problem$left_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+3, nrows = 1)      # NECESITAMOS SUMARLE 1 A CADA DATO, PERO AÚN NO LOS TRENEMOS GUARDADOS COMO INTEGERS, NI LOS TENEMOS SEPARADOS, ASÍ QUE NO PODEMOS.  
+  problem$actions             <- data.frame("left", "right", "down", "top") #Preguntar Podriamos omitirlo no?
+  problem$left_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+3, nrows = 1)    # NECESITAMOS SUMARLE 1 A CADA DATO, PERO AÚN NO LOS TRENEMOS GUARDADOS COMO INTEGERS, NI LOS TENEMOS SEPARADOS, ASÍ QUE NO PODEMOS.  
   problem$right_collumn       <- read.csv(file, sep=";", header = FALSE, skip=problem$size+4, nrows = 1)   
   problem$down_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+5, nrows = 1)   
   problem$top_collumn         <- read.csv(file, sep=";", header = FALSE, skip=problem$size+6, nrows = 1)   
-  
-  # You can add additional attributes
-  # problem$<aditional_attribute>  <- <INSERT CODE HERE>
+  problem$cost                <- 0
   
   return(problem)
 }
 initialize.problem("../data/feet-maze-3b.txt")
+problem$left_collumn
+problem$right_collumn
+problem$top_collumn
+problem$down_collumn
+
+
 # Analyzes if an action can be applied in the received state.
 is.applicable <- function (state, action, problem) {
-  result <- FALSE # Default value is FALSE.
+  result <- TRUE # Default value is FALSE.
   
   # <INSERT CODE HERE TO CHECK THE APPLICABILITY OF EACH ACTION>
-  # Dos condiciones: barrera, pie, y borde
+  # tres condiciones: barrera, pie, y borde
+  #Borde --> Acabado  
   
+
+  if (action == "left"){
+    #Borde
+    if (state[2]<1) return(FALSE)
+    #Pies
+    state2 <- getState()
+    if (state[2] == getFeet()-1) return(FALSE)
+    #Barreras
+    for ( state in problem$left_collumn){
+      if (getState[2] == as.integer(substr(state,3,3))+1) return (FALSE)
+    }
+  }
+    
+  if (action == "right"){
+    #Borde
+    if (problem$size[2]<state[2]) return (FALSE)
+    #Pies
+    if (state[2] == getFeet()+1) return(FALSE)
+    #Barreras
+    for ( state in problem$right_collumn){
+      if (getState[2] == as.integer(substr(state,3,3))+1) return (FALSE)
+    }
+  }
+  
+  if (action == "down"){
+    #Borde
+    if (problem$size[1]<state[1]) return (FALSE)
+    #Pies
+    if (state[1] == getFeet()+1) return(FALSE)
+    #Barreras
+    for ( state in problem$down_collumn){
+      if (getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)
+    }
+  }
+  
+  if (action == "up"){
+    #Borde
+    if (1 > state[1]) return (FALSE) #Preguntar Error en ejecucion
+    #Pies
+    if (state[1] == getFeet()-1) return(FALSE)
+    #Barreras
+    for ( state in problem$top_collumn){
+      if (getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)
+    }
+  }
+  
+  problem$cost=problem$cost+1 #Preguntar si se ejecuta o no
   return(result)
 }
+
 
 # Returns the state resulting on applying the action over the state
 effect <- function (state, action, problem) {
   result <- state # Default value is the current state.
   
-  # <INSERT YOUR CODE HERE TO MODIFY CURRENT STATE>   Aquñi definimos lo que hace cada acción
-  
-  return(result)
+  if (action == left) return (result <- c(state[1], state[2]-1))
+    
+  if (action == right) return (result <- c(state[1], state[2]+1))
+    
+  if (action == down) return (result <- c(state[1]+1, state[2]))
+
+  if (action == up) return (result <- c(state[1]-1, state[2])) 
 }
 
 # Analyzes if a state is final or not
-is.final.state <- function (state, final_satate, problem) {
-  result <- FALSE # Default value is FALSE.
-  
-  # <INSERT YOUR CODE HERE TO CHECK WHETHER A STATE IS FINAL OR NOT> 
-  
+is.final.state <- function (state, final_state, problem) {
+  # result <- FALSE # Default value is FALSE.
+  if (state[1] == problem$final_state[1] && state[2] == problem$final_state[2]) return (result <- TRUE)
   return(result)
 }
 
+is.final.state()
+
 # Transforms a state into a string
 to.string = function (state, problem) {
-  
-  # <INSERT YOUR CODE HERE TO GENERATE A STRING THAT REPRESENTS THE STATE> 
+  print(paste("It is located at the coordinate ", state))
+  # print(paste("It is located at the coordinate", state[1], state[2]))
 }
 
 # Returns the cost of applying an action over a state
 get.cost <- function (action, state, problem) {
-  
-  # <INSERT YOUR CODE HERE TO RETURN THE COST OF APPLYING THE ACTION ON THE STATE> 
-  
-  return(1) # Default value is 1.
+  return(problem$cost)
 }
 
 # Heuristic function used by Informed Search Algorithms
@@ -79,3 +133,21 @@ get.evaluation <- function(state, problem) {
   
 	return(1) # Default value is 1.
 }
+
+#Devuelve una L o R
+#Preguntar
+
+getState <- function(coordinate, problem){ 
+  state <- (problem$table[coordinate[1], coordinate[2]])
+  return (state) #Devolver en integer!
+}
+
+#Devuelve una L o R
+#Preguntar
+getFeet <- function(state, problem){ 
+  feet <- (problem$table[state[1], state[2]])
+  return (feet)
+}
+
+
+
