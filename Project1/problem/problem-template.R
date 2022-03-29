@@ -23,7 +23,7 @@ initialize.problem <- function(file) {
   problem$right_collumn       <- read.csv(file, sep=";", header = FALSE, skip=problem$size+4, nrows = 1)   
   problem$down_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+5, nrows = 1)   
   problem$top_collumn         <- read.csv(file, sep=";", header = FALSE, skip=problem$size+6, nrows = 1)   
-  problem$cost                <- 0
+  problem$cost                <- 0  # Hace falta?
   
   return(problem)
 }
@@ -42,7 +42,7 @@ is.applicable <- function (state, action, problem) {
   # tres condiciones: barrera, pie, y borde
   #Borde --> Acabado  
   
-
+  # IZQUIERDA
   if (action == "left"){
     #Borde
     if (state[2]<1) return(FALSE)
@@ -51,10 +51,11 @@ is.applicable <- function (state, action, problem) {
     if (state[2] == getFeet()-1) return(FALSE)
     #Barreras
     for ( state in problem$left_collumn){
-      if (getState[2] == as.integer(substr(state,3,3))+1) return (FALSE)
+      if (getState[2] == as.integer(substr(state,3,3))+1 && getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)
     }
   }
     
+  # DERECHA
   if (action == "right"){
     #Borde
     if (problem$size[2]<state[2]) return (FALSE)
@@ -62,10 +63,11 @@ is.applicable <- function (state, action, problem) {
     if (state[2] == getFeet()+1) return(FALSE)
     #Barreras
     for ( state in problem$right_collumn){
-      if (getState[2] == as.integer(substr(state,3,3))+1) return (FALSE)
+      if (getState[2] == as.integer(substr(state,3,3))+1 && getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)
     }
   }
   
+  # ABAJO
   if (action == "down"){
     #Borde
     if (problem$size[1]<state[1]) return (FALSE)
@@ -73,10 +75,11 @@ is.applicable <- function (state, action, problem) {
     if (state[1] == getFeet()+1) return(FALSE)
     #Barreras
     for ( state in problem$down_collumn){
-      if (getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)
+      if (getState[1] == as.integer(substr(state,1,1))+1 && getState[2] == as.integer(substr(state,3,3))+1) return (FALSE)
     }
   }
   
+  #ARRIBA
   if (action == "up"){
     #Borde
     if (1 > state[1]) return (FALSE) #Preguntar Error en ejecucion
@@ -84,7 +87,7 @@ is.applicable <- function (state, action, problem) {
     if (state[1] == getFeet()-1) return(FALSE)
     #Barreras
     for ( state in problem$top_collumn){
-      if (getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)
+      if (getState[1] == as.integer(substr(state,1,1))+1 && getState[2] == as.integer(substr(state,3,3))+1) return (FALSE) # poner and
     }
   }
   
@@ -138,7 +141,7 @@ get.evaluation <- function(state, problem) {
 #Preguntar
 
 getState <- function(coordinate, problem){ 
-  state <- (problem$table[coordinate[1], coordinate[2]])
+  state <- c(coordinate[1], coordinate[2])     
   return (state) #Devolver en integer!
 }
 
@@ -149,5 +152,14 @@ getFeet <- function(state, problem){
   return (feet)
 }
 
+
+# El state qué es en sí? La coordenada x,y o si la coordenada es L/R
+# Preguntar por problem$actions: se pueden omitir? cómo estructurarlas concretamente?
+# problem$cost hace falta? heuristic hace falta?     
+# Falta alguna condición? (isApplicacble)
+# Revisar formato de datos
+# Preguntar por error en ejecución
+# Cómo ejecutarlo?
+# En los métodos hay que usaar todos los parámetros que hay?
 
 
