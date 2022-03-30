@@ -10,6 +10,7 @@
 # This function must return a list with the information needed to solve the problem.
 # (Depending on the problem, it should receive or not parameters)
 initialize.problem <- function(file) {
+  
   problem <- list() # Default value is an empty list.
   
   # This attributes are compulsory
@@ -18,20 +19,16 @@ initialize.problem <- function(file) {
   problem$table               <- read.csv(file, sep=";", header = FALSE, skip=1, nrows=problem$size[1])
   problem$initial_state       <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[1])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[2]+1)) # Buscamos la posición de la fila en la que se encuentra el estado, y al número correspondiente le sumamos uno, ya que los vectores en R comienzan por 1 
   problem$final_state         <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[1])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[2]+1)) # Hacemos la misma operiación que para el estado inicial, pero una fila más abajo
-  problem$actions             <- data.frame("left", "right", "down", "top") #Preguntar Podriamos omitirlo no?
+  problem$actions_possible    <- data.frame("left", "right", "down", "top") #Preguntar Podriamos omitirlo no?
   problem$left_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+3, nrows = 1)    # NECESITAMOS SUMARLE 1 A CADA DATO, PERO AÚN NO LOS TRENEMOS GUARDADOS COMO INTEGERS, NI LOS TENEMOS SEPARADOS, ASÍ QUE NO PODEMOS.  
   problem$right_collumn       <- read.csv(file, sep=";", header = FALSE, skip=problem$size+4, nrows = 1)   
   problem$down_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+5, nrows = 1)   
   problem$top_collumn         <- read.csv(file, sep=";", header = FALSE, skip=problem$size+6, nrows = 1)   
-  problem$cost                <- 0  # Hace falta?
+
   
   return(problem)
 }
-initialize.problem("../data/feet-maze-3b.txt")
-problem$left_collumn
-problem$right_collumn
-problem$top_collumn
-problem$down_collumn
+
 
 
 # Analyzes if an action can be applied in the received state.
@@ -63,9 +60,9 @@ is.applicable <- function (state, action, problem) {
     if (state[2] == getFeet()+1) return(FALSE)
     #Barreras
     for ( state in problem$right_collumn){
-      if (getState[2] == as.integer(substr(state,3,3))+1 && getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)
+      if (getState[2] == as.integer(substr(state,3,3))+1 && getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)  # texto y comparar con %in%    puede haber más muros
     }
-  }
+  }    # mirar si hacia el destino tietne muro, y el destino, tiene muro desde el origen.
   
   # ABAJO
   if (action == "down"){
@@ -100,7 +97,7 @@ is.applicable <- function (state, action, problem) {
 effect <- function (state, action, problem) {
   result <- state # Default value is the current state.
   
-  if (action == left) return (result <- c(state[1], state[2]-1))
+  if (action == "left") return (result <- c(state[1], state[2]-1))
     
   if (action == right) return (result <- c(state[1], state[2]+1))
     
