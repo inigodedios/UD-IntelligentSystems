@@ -24,32 +24,41 @@ initialize.problem <- function(file) {
   problem$right_collumn       <- read.csv(file, sep=";", header = FALSE, skip=problem$size+4, nrows = 1)   
   problem$down_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+5, nrows = 1)   
   problem$top_collumn         <- read.csv(file, sep=";", header = FALSE, skip=problem$size+6, nrows = 1)   
-
-  
   return(problem)
 }
 
+#HAY QUE PONER BIEN LO DE LA X Y LA Y
 
+# Transforms a state into a string
+to.string <- function (state) {
+  actualState<- c(state[1]-1, state[2]-1)
+  stateString <- toString (actualState)
+  finalState <-gsub(" ", "", stateString)
+  return (finalState)
+}
 
 # Analyzes if an action can be applied in the received state.
 is.applicable <- function (state, action, problem) {
   result <- TRUE # Default value is FALSE.
-  
-  # <INSERT CODE HERE TO CHECK THE APPLICABILITY OF EACH ACTION>
-  # tres condiciones: barrera, pie, y borde
+
   #Borde --> Acabado  
+  #Barrera --> Bienm¿?
+  #Pies --> Mal
   
   # IZQUIERDA
   if (action == "left"){
     #Borde
     if (state[2]<1) return(FALSE)
     #Pies
+    
+    
     state2 <- getState()
     if (state[2] == getFeet()-1) return(FALSE)
     #Barreras
-    for ( state in problem$left_collumn){
-      if (getState[2] == as.integer(substr(state,3,3))+1 && getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)
-    }
+    if (toString(state) %in% problem$left_collumn) return (FALSE)
+    state2 <- c(state[1], state[2]-1)#Una posicion a la izquierda
+    if (toString(state2) %in% problem$right_collumn) return (FALSE) #Hay que restarle 1 ya que la comprobacion se hace desde la casilla de la izquierda
+    
   }
     
   # DERECHA
@@ -59,9 +68,10 @@ is.applicable <- function (state, action, problem) {
     #Pies
     if (state[2] == getFeet()+1) return(FALSE)
     #Barreras
-    for ( state in problem$right_collumn){
-      if (getState[2] == as.integer(substr(state,3,3))+1 && getState[1] == as.integer(substr(state,1,1))+1) return (FALSE)  # texto y comparar con %in%    puede haber más muros
-    }
+    if (toString(state) %in% problem$right_collumn) return (FALSE)
+    state2 <- c(state[1], state[2]+1)
+    if (toString(state2) %in% problem$left_collumn) return (FALSE)
+    
   }    # mirar si hacia el destino tietne muro, y el destino, tiene muro desde el origen.
   
   # ABAJO
@@ -71,9 +81,10 @@ is.applicable <- function (state, action, problem) {
     #Pies
     if (state[1] == getFeet()+1) return(FALSE)
     #Barreras
-    for ( state in problem$down_collumn){
-      if (getState[1] == as.integer(substr(state,1,1))+1 && getState[2] == as.integer(substr(state,3,3))+1) return (FALSE)
-    }
+    if (toString(state) %in% problem$down_collumn) return (FALSE)
+    state2 <- c(state[1]+1, state[2])
+    if (toString(state2) %in% problem$top_collumn) return (FALSE)
+    
   }
   
   #ARRIBA
@@ -83,12 +94,11 @@ is.applicable <- function (state, action, problem) {
     #Pies
     if (state[1] == getFeet()-1) return(FALSE)
     #Barreras
-    for ( state in problem$top_collumn){
-      if (getState[1] == as.integer(substr(state,1,1))+1 && getState[2] == as.integer(substr(state,3,3))+1) return (FALSE) # poner and
-    }
+    if (toString(state) %in% problem$top_collumn) return (FALSE)
+    state2 <- c(state[1]-1, state[2])
+    if (toString(state2) %in% problem$down_collumn) return (FALSE) 
   }
   
-  problem$cost=problem$cost+1 #Preguntar si se ejecuta o no
   return(result)
 }
 
@@ -113,13 +123,9 @@ is.final.state <- function (state, final_state, problem) {
   return(result)
 }
 
-is.final.state()
 
-# Transforms a state into a string
-to.string = function (state, problem) {
-  print(paste("It is located at the coordinate ", state))
-  # print(paste("It is located at the coordinate", state[1], state[2]))
-}
+
+
 
 # Returns the cost of applying an action over a state
 get.cost <- function (action, state, problem) {
@@ -152,7 +158,7 @@ getFeet <- function(state, problem){
 
 # El state qué es en sí? La coordenada x,y o si la coordenada es L/R
 # Preguntar por problem$actions: se pueden omitir? cómo estructurarlas concretamente?
-# problem$cost hace falta? heuristic hace falta?     
+     
 # Falta alguna condición? (isApplicacble)
 # Revisar formato de datos
 # Preguntar por error en ejecución
