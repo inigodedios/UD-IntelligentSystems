@@ -1,6 +1,6 @@
 # =======================================================================
 # Group Name: Group 13
-# Students: Iñigo de Dios, Alexandru Gabriel Nitu
+# Students: Iñigo de Dios & Alexandru Gabriel, Nitu
 # =======================================================================
 # You must implement the different functions according to your problem.
 # You cannot modify the function headers because they are used by the 
@@ -17,8 +17,8 @@ initialize.problem <- function(file) {
   problem$name                <- paste0("Feet Maze - [", file, "]")
   problem$size                <- c(as.integer(read.csv(file, sep=";", header = FALSE, nrows=1)[1]),as.integer(read.csv(file, sep=";", header = FALSE, nrows=1)[2]))
   problem$table               <- read.csv(file, sep=";", header = FALSE, skip=1, nrows=problem$size[1])
-  problem$initial_state       <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[1])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[2]+1)) # Buscamos la posición de la fila en la que se encuentra el estado, y al número correspondiente le sumamos uno, ya que los vectores en R comienzan por 1 
-  problem$final_state         <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[1])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[2]+1)) # Hacemos la misma operiación que para el estado inicial, pero una fila más abajo
+  problem$initial_state       <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[2])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[1]+1)) # Buscamos la posición de la fila en la que se encuentra el estado, y al número correspondiente le sumamos uno, ya que los vectores en R comienzan por 1 
+  problem$final_state         <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[2])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[1]+1)) # Hacemos la misma operiación que para el estado inicial, pero una fila más abajo
   problem$actions_possible    <- data.frame("left", "right", "down", "top") #Preguntar Podriamos omitirlo no?
   problem$left_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+3, nrows = 1)    # NECESITAMOS SUMARLE 1 A CADA DATO, PERO AÚN NO LOS TRENEMOS GUARDADOS COMO INTEGERS, NI LOS TENEMOS SEPARADOS, ASÍ QUE NO PODEMOS.  
   problem$right_collumn       <- read.csv(file, sep=";", header = FALSE, skip=problem$size+4, nrows = 1)   
@@ -31,7 +31,7 @@ initialize.problem <- function(file) {
 
 # Transforms a state into a string
 to.string <- function (state) {
-  actualState<- c(state[1]-1, state[2]-1)
+  actualState<- c(state[2]-1, state[1]-1)
   stateString <- toString (actualState)
   finalState <-gsub(" ", "", stateString)
   return (finalState)
@@ -40,9 +40,9 @@ to.string <- function (state) {
 # Analyzes if an action can be applied in the received state.
 is.applicable <- function (state, action, problem) {
   result <- TRUE # Default value is FALSE.
-
-  #Borde --> Acabado  
-  #Barrera --> Bienm¿?
+  
+  #Borde --> Acabado 
+  #Barrera --> Bien¿?
   #Pies --> Mal
   
   # IZQUIERDA
@@ -50,53 +50,48 @@ is.applicable <- function (state, action, problem) {
     #Borde
     if (state[2]<1) return(FALSE)
     #Pies
-    
-    
-    state2 <- getState()
-    if (state[2] == getFeet()-1) return(FALSE)
+    if (problem$table[state[2]][state[1]-1] == problem$table[state[2]][state[1]]) return (FALSE)
     #Barreras
     if (toString(state) %in% problem$left_collumn) return (FALSE)
-    state2 <- c(state[1], state[2]-1)#Una posicion a la izquierda
+    state2 <- c(state[2], state[1]-1) #Una posicion a la izquierda
     if (toString(state2) %in% problem$right_collumn) return (FALSE) #Hay que restarle 1 ya que la comprobacion se hace desde la casilla de la izquierda
-    
   }
-    
+  
   # DERECHA
   if (action == "right"){
     #Borde
-    if (problem$size[2]<state[2]) return (FALSE)
+    if (problem$size[2]<state[1]) return (FALSE)
     #Pies
-    if (state[2] == getFeet()+1) return(FALSE)
+    if (problem$table[state[2]][state[1]-1] == state) return (FALSE)
     #Barreras
     if (toString(state) %in% problem$right_collumn) return (FALSE)
-    state2 <- c(state[1], state[2]+1)
+    state2 <- c(state[2], state[1]+1)
     if (toString(state2) %in% problem$left_collumn) return (FALSE)
     
-  }    # mirar si hacia el destino tietne muro, y el destino, tiene muro desde el origen.
+  }
   
   # ABAJO
   if (action == "down"){
     #Borde
     if (problem$size[1]<state[1]) return (FALSE)
     #Pies
-    if (state[1] == getFeet()+1) return(FALSE)
+    if (problem$table[state[2]][state[1]-1] == state) return (FALSE)
     #Barreras
     if (toString(state) %in% problem$down_collumn) return (FALSE)
-    state2 <- c(state[1]+1, state[2])
+    state2 <- c(state[2]+1, state[1])
     if (toString(state2) %in% problem$top_collumn) return (FALSE)
-    
   }
   
   #ARRIBA
   if (action == "up"){
     #Borde
-    if (1 > state[1]) return (FALSE) #Preguntar Error en ejecucion
+    if (1 > state[2]) return (FALSE) #Preguntar Error en ejecucion
     #Pies
-    if (state[1] == getFeet()-1) return(FALSE)
+    if (problem$table[state[2]][state[1]-1] == state) return (FALSE)
     #Barreras
     if (toString(state) %in% problem$top_collumn) return (FALSE)
-    state2 <- c(state[1]-1, state[2])
-    if (toString(state2) %in% problem$down_collumn) return (FALSE) 
+    state2 <- c(state[2]-1, state[1])
+    if (toString(state2) %in% problem$down_collumn) return (FALSE)
   }
   
   return(result)
@@ -107,24 +102,22 @@ is.applicable <- function (state, action, problem) {
 effect <- function (state, action, problem) {
   result <- state # Default value is the current state.
   
-  if (action == "left") return (result <- c(state[1], state[2]-1))
-    
-  if (action == right) return (result <- c(state[1], state[2]+1))
-    
-  if (action == down) return (result <- c(state[1]+1, state[2]))
-
-  if (action == up) return (result <- c(state[1]-1, state[2])) 
+  if (action == "left") return (result <- c(state[2], state[1]-1))
+  
+  if (action == "right") return (result <- c(state[2], state[1]+1))
+  
+  if (action == "down") return (result <- c(state[2]+1, state[1]))
+  
+  if (action == "up") return (result <- c(state[2]-1, state[1]))
 }
-
 # Analyzes if a state is final or not
 is.final.state <- function (state, final_state, problem) {
   # result <- FALSE # Default value is FALSE.
-  if (state[1] == problem$final_state[1] && state[2] == problem$final_state[2]) return (result <- TRUE)
+  result <- FALSE
+  if (state[1] == problem$final_state[1] && state[2] == problem$final_state[2]) return (TRUE)
+  
   return(result)
 }
-
-
-
 
 
 # Returns the cost of applying an action over a state
@@ -144,14 +137,14 @@ get.evaluation <- function(state, problem) {
 #Preguntar
 
 getState <- function(coordinate, problem){ 
-  state <- c(coordinate[1], coordinate[2])     
+  state <- c(coordinate[2], coordinate[1])     
   return (state) #Devolver en integer!
 }
 
 #Devuelve una L o R
 #Preguntar
 getFeet <- function(state, problem){ 
-  feet <- (problem$table[state[1], state[2]])
+  feet <- (problem$table[state[2], state[1]])
   return (feet)
 }
 
