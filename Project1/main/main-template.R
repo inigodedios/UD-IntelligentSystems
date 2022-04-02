@@ -11,7 +11,9 @@ graphics.off()
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 #Import the libraries needed to display the results
-
+install.packages("kableExtra")
+library(kableExtra)
+library(magrittr)
 
 # Include algorithm functions
 source("../algorithms/blind/expand-node.R")
@@ -27,7 +29,7 @@ source("../problem/problem-template.R")
 source("../algorithms/results-analysis/analyze-results.R")
 
 # ADD YOUR CODE HERE TO INITIALIZE YOUR PROBLEM AND INCLUDE PROBLEM DEFINITION FILE
-problem <- initialize.problem("../data/feet-maze-3b.txt") 
+problem <- initialize.problem("../data/feet-maze-1a.txt") 
 
 
 bfs_ts <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000)   
