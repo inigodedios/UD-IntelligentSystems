@@ -29,7 +29,7 @@ source("../problem/problem-template.R")
 source("../algorithms/results-analysis/analyze-results.R")
 
 # ADD YOUR CODE HERE TO INITIALIZE YOUR PROBLEM AND INCLUDE PROBLEM DEFINITION FILE
-problem <- initialize.problem("../data/feet-maze-1a.txt") 
+problem <- initialize.problem("../data/feet-maze-2b.txt") 
 
 
 bfs_ts <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000)   
