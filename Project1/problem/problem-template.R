@@ -18,34 +18,30 @@ initialize.problem <- function(file) {
   problem$name                <- paste0("Feet Maze - [", file, "]")
   problem$size                <- c(as.integer(read.csv(file, sep=";", header = FALSE, nrows=1)[1]),as.integer(read.csv(file, sep=";", header = FALSE, nrows=1)[2])) #y,x
   problem$table               <- read.csv(file, sep=";", header = FALSE, skip=1, nrows=problem$size[1]) #y,x
-  problem$initial_state       <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[2])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[2]+1)) #y,x # Buscamos la posición de la fila en la que se encuentra el estado, y al número correspondiente le sumamos uno, ya que los vectores en R comienzan por 1 
-  problem$final_state         <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[2])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[2]+1)) #y,x # Hacemos la misma operiación que para el estado inicial, pero una fila más abajo
-  problem$actions_possible    <- data.frame("left", "right", "down", "top") #Preguntar Podriamos omitirlo no?
+  problem$initial_state       <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[2])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[1]+1)) #y,x # Buscamos la posición de la fila en la que se encuentra el estado, y al número correspondiente le sumamos uno, ya que los vectores en R comienzan por 1 
+  problem$final_state         <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[2])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[1]+1)) #y,x # Hacemos la misma operiación que para el estado inicial, pero una fila más abajo
+  problem$actions_possible    <- data.frame("Up", "Down", "Left", "Right") 
   problem$left_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+3, nrows = 1)    # NECESITAMOS SUMARLE 1 A CADA DATO, PERO AÚN NO LOS TRENEMOS GUARDADOS COMO INTEGERS, NI LOS TENEMOS SEPARADOS, ASÍ QUE NO PODEMOS.  
   problem$right_collumn       <- read.csv(file, sep=";", header = FALSE, skip=problem$size+4, nrows = 1)   
   problem$down_collumn        <- read.csv(file, sep=";", header = FALSE, skip=problem$size+5, nrows = 1)   
   problem$top_collumn         <- read.csv(file, sep=";", header = FALSE, skip=problem$size+6, nrows = 1)   
+  
   return(problem)
   
 }
-problem$size
-problem$table
-#HAY QUE PONER BIEN LO DE LA X Y LA Y
 
 # Transforms a state into a string
 to.string <- function (state) { #OK
-  #state = c(3,4)
   actualState<- c(state[1]-1, state[2]-1)
   stateString <- toString (actualState)
   finalState <-gsub(" ", "", stateString)
-  return (finalState) #Devuelve "3,2"
+  return (finalState)
 }
 
 # Analyzes if an action can be applied in the received state.
 is.applicable <- function (state, action, problem) {
-  result <- TRUE # Default value is FALSE.
+  result <- FALSE # Default value is FALSE.    FALSE?
   
-  state = c(3,4)
   
   # IZQUIERDA
   if (action == "left"){
@@ -78,25 +74,25 @@ is.applicable <- function (state, action, problem) {
   
   # ABAJO #Corregir mañana
   if (action == "down"){
-    #Borde
-    if (problem$size[1]<state[2]) return (FALSE) # problem$Size[1] es la fila y state[2] tambien es la fila
-    #Pies
-    if (problem$table[state[2]][state[1]-1] == state) return (FALSE)
-    #Barreras
+    #Borde  #OK
+    if (1>state[1]) return (FALSE)
+    #Pies  #OK
+    if (problem$table[state[1]-1, state[2]] == problem$table[state[1], state[2]]) return (FALSE)
+    #Barreras #OK
     if (to.string(state) %in% problem$down_collumn) return (FALSE)
-    state2 <- c(state[2]+1, state[1])
+    state2 <- c(state[1]-1, state[2])
     if (to.string(state2) %in% problem$top_collumn) return (FALSE)
   }
   
   #ARRIBA #Corregir mañana
   if (action == "up"){
-    #Borde
-    if (1>state[1]) return (FALSE) #PREGUNTAR CUAL ES el limite real en el problema
-    #Pies
-    if (problem$table[state[1]-1][state[2]] == problem$table[state[1]][state[2]]) return (FALSE)
-    #Barreras
+    #Borde # OK
+    if (problem$size[1]<state[1]) return (FALSE) #PREGUNTAR CUAL ES el limite real en el problema
+    #Pies  #OK
+    if (problem$table[state[1]+1,state[2]] == problem$table[state[1],state[2]]) return (FALSE)
+    #Barreras #OK
     if (to.string(state) %in% problem$top_collumn) return (FALSE)
-    state2 <- c(state[1], state[2])
+    state2 <- c(state[1]+1, state[2])
     if (to.string(state2) %in% problem$down_collumn) return (FALSE)
   }
   
@@ -108,28 +104,26 @@ is.applicable <- function (state, action, problem) {
 effect <- function (state, action, problem) {
   result <- state # Default value is the current state.
   
-  if (action == "left") return (result <- c(state[1]),state[2]-1)
+  if (action == "left") (result <- c(state[1], state[2]-1))
   
-  if (action == "right") return (result <- c(state[1], state[2]+1))
+  if (action == "right") (result <- c(state[1], state[2]+1))
   
-  if (action == "down") return (result <- c(state[1]+1, state[2])) #Corregir mañana
+  if (action == "down") (result <- c(state[1]-1, state[2]))
   
-  if (action == "up") return (result <- c(state[1]-1, state[2])) #Corregir mañana
+  if (action == "up") (result <- c(state[1]+1, state[2]))
+  
+  return (result)
 }
 # Analyzes if a state is final or not
 is.final.state <- function (state, final_state, problem) { #OK
-  # result <- FALSE # Default value is FALSE.
-  result <- FALSE
-  con1 = state[1] == problem$final_state[1]
-  con2 = state[2] == problem$final_state[2]
-  if (con1 && con2) result <- TRUE
-  return(result)
+  result <- FALSE # Default value is FALSE.
+  if (state[1] == final_state[1] && state[2] == final_state[2]) (result <- TRUE)
+  return (result)
 }
-
 
 # Returns the cost of applying an action over a state
 get.cost <- function (action, state, problem) {
-  return(problem$cost)
+  return(1)
 }
 
 # Heuristic function used by Informed Search Algorithms
@@ -140,29 +134,6 @@ get.evaluation <- function(state, problem) {
 	return(1) # Default value is 1.
 }
 
-#Devuelve una L o R
-#Preguntar
 
-getState <- function(coordinate, problem){ 
-  state <- c(coordinate[2], coordinate[1])     
-  return (state) #Devolver en integer!
-}
-
-#Devuelve una L o R
-#Preguntar
-getFeet <- function(state, problem){ 
-  feet <- (problem$table[state[2], state[1]])
-  return (feet)
-}
-
-
-# El state qué es en sí? La coordenada x,y o si la coordenada es L/R
-# Preguntar por problem$actions: se pueden omitir? cómo estructurarlas concretamente?
-     
-# Falta alguna condición? (isApplicacble)
-# Revisar formato de datos
-# Preguntar por error en ejecución
-# Cómo ejecutarlo?
-# En los métodos hay que usaar todos los parámetros que hay?
 
 
