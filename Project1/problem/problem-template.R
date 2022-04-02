@@ -21,10 +21,10 @@ initialize.problem <- function(file) {
   problem$state_initial       <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[2])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=1+problem$size[1], nrows=1)[1]+1)) #y,x # Buscamos la posición de la fila en la que se encuentra el estado, y al número correspondiente le sumamos uno, ya que los vectores en R comienzan por 1 
   problem$state_final         <- c(as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[2])+1, as.integer(read.csv(file, sep=",", header = FALSE, skip=2+problem$size[1], nrows=1)[1]+1)) #y,x # Hacemos la misma operiación que para el estado inicial, pero una fila más abajo
   problem$actions_possible    <- data.frame(direction = c("Up", "Down", "Left", "Right"), stringsAsFactors = FALSE)
-  problem$left                <- read.csv(file, sep=";", header = FALSE, skip=problem$size+3, nrows = 1)    # NECESITAMOS SUMARLE 1 A CADA DATO, PERO AÚN NO LOS TRENEMOS GUARDADOS COMO INTEGERS, NI LOS TENEMOS SEPARADOS, ASÍ QUE NO PODEMOS.
-  problem$right               <- read.csv(file, sep=";", header = FALSE, skip=problem$size+4, nrows = 1)
-  problem$down                <- read.csv(file, sep=";", header = FALSE, skip=problem$size+5, nrows = 1)
-  problem$top                 <- read.csv(file, sep=";", header = FALSE, skip=problem$size+6, nrows = 1)
+  problem$left                <- read.csv(file, sep=";", header = FALSE, skip=problem$size[1]+3, nrows = 1)    # NECESITAMOS SUMARLE 1 A CADA DATO
+  problem$right               <- read.csv(file, sep=";", header = FALSE, skip=problem$size [1]+4, nrows = 1)
+  problem$down                <- read.csv(file, sep=";", header = FALSE, skip=problem$size [1]+5, nrows = 1)
+  problem$top                 <- read.csv(file, sep=";", header = FALSE, skip=problem$size[1]+6, nrows = 1)
 
   return(problem)
 }
@@ -43,16 +43,35 @@ is.applicable <- function (state, action, problem) {
   result <- FALSE # Default value is FALSE.    FALSE?
 
   if (action == "Left"){
-
-    l1 <- 1>=state[2] #6,1
-    l2 <-problem$table[state[1], state[2]-1] == problem$table[state[1], state[2]]
-    l3 <-to.string(state) %in% problem$left #6,1
-    if (state[2] != 1){
-      state2 <- c(state[1], state[2]-1) #6,0 #Out of bounds
-      l4 <-to.string(state2) %in% problem$right
-    }else{l4 <- FALSE}
-
-    if (l1 && l2 && l3 && l4) return(FALSE)
+    
+    if (-1>=state[2]){
+      return(FALSE)
+    }else{
+      if (problem$table[state[1], state[2]-1] == problem$table[state[1], state[2]]){
+        return(FALSE)
+      }else{
+        if (to.string(state) %in% problem$left){
+          return (FALSE)
+        }else{
+          state2 <- c(state[1], state[2]-1)
+          if (to.string(state2) %in% problem$right){
+            return (FALSE)
+          }
+        }
+      }
+      return (TRUE)
+    } 
+    
+    
+    # l1 <-1>=state[2] #6,1
+    # l2 <-problem$table[state[1], state[2]-1] == problem$table[state[1], state[2]]
+    # l3 <-to.string(state) %in% problem$left #6,1
+    # if (state[2] != 1){
+    #   state2 <- c(state[1], state[2]-1) #6,0 #Out of bounds
+    #   l4 <-to.string(state2) %in% problem$right
+    # }else{l4 <- FALSE}
+    # 
+    # if (l1 && l2 && l3 && l4) return(FALSE)
 
     # #Borde #OK
     # if(1>=state[2]) return(FALSE)
@@ -88,7 +107,11 @@ is.applicable <- function (state, action, problem) {
 
   # ABAJO #Corregir mañana
   if (action == "Down"){
+    
+  
 
+      
+      
     d1 <-1>=state[1]
     d2 <-problem$table[state[1]-1, state[2]] == problem$table[state[1], state[2]]
     d3 <-to.string(state) %in% problem$down
@@ -112,13 +135,33 @@ is.applicable <- function (state, action, problem) {
   #ARRIBA #Corregir mañana
   if (action == "Up"){
 
-    u1 <- problem$size[1]<=state[1]
-    u2 <- problem$table[state[1]+1, state[2]] == problem$table[state[1], state[2]]
-    u3 <- to.string(state) %in% problem$top
-    if (problem$size[1]!=state[1]){
-      state2 <- c(state[1]+1, state[2])
-      u4 <-to.string(state2) %in% problem$down
-    }else{u4 <- FALSE}
+    if (problem$size[1]<=state[1]){
+      return (FALSE)
+    }else{
+      if (problem$table[state[1]+1, state[2]] == problem$table[state[1], state[2]]){
+        return(FALSE)
+      }else{
+        if (to.string(state) %in% problem$top){
+          return(FALSE)
+        }else{
+          state2 <- c(state[1]+1, state[2])
+          if (to.string(state2) %in% problem$down){
+            return (FALSE)
+          }
+        }
+      }
+      return (TRUE)
+    }
+      
+      
+      
+    # u1 <- problem$size[1]<=state[1]
+    # u2 <- problem$table[state[1]+1, state[2]] == problem$table[state[1], state[2]]
+    # u3 <- to.string(state) %in% problem$top
+    # if (problem$size[1]!=state[1]){
+    #   state2 <- c(state[1]+1, state[2])
+    #   u4 <-to.string(state2) %in% problem$down
+    # }else{u4 <- FALSE}
 
   #   #Borde # OK
   #   if (problem$size[1]<=state[1]) return (FALSE) #PREGUNTAR CUAL ES el limite real en el problema
@@ -137,6 +180,7 @@ is.applicable <- function (state, action, problem) {
 # Returns the state resulting on applying the action over the state
 effect <- function (state, action, problem) {
   result <- state # Default value is the current state.
+  
   if (action == "Left") (result <- c(state[1], state[2]-1))
 
   if (action == "Right") (result <- c(state[1], state[2]+1))
@@ -147,6 +191,9 @@ effect <- function (state, action, problem) {
 
   return (result)
 }
+
+effect(c(4,4), "Up", problem)
+
 # Analyzes if a state is final or not
 is.final.state <- function (state, final_state, problem) { 
   result <- FALSE # Default value is FALSE.
