@@ -11,8 +11,8 @@ graphics.off()
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 #Import the libraries needed to display the results
-install.packages("kableExtra")
-library(kableExtra)
+#install.packages("kableExtra")
+#library(kableExtra)
 library(magrittr)
 
 # Include algorithm functions
