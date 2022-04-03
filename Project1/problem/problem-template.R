@@ -38,53 +38,33 @@ to.string <- function (state) { #OK
 }
 
 
+
 # Analyzes if an action can be applied in the received state.
 is.applicable <- function (state, action, problem) {
-  result <- FALSE # Default value is FALSE.    FALSE?
-
-  if (action == "Left"){
+  result <- FALSE # Default value is FALSE. 
+  
+  if(action == "Left"){ #FUNCIONA COMPROBADO is.applicable(c(6,3), "Left", problem) 
+    #Borde
+    l1 <-1>=state[2] #6,1
+    #Pies
+    l2 <-problem$table[state[1], state[2]-1] == problem$table[state[1], state[2]]
+    #Barreras
+    l3 <-to.string(state) %in% problem$left #6,1
+    if (state[2] != 1){
+      state2 <- c(state[1], state[2]-1) #6,0 #Out of bounds
+      l4 <-to.string(state2) %in% problem$right
+    }else{l4 <- FALSE}
     
-    if (-1>=state[2]){
-      return(FALSE)
-    }else{
-      if (problem$table[state[1], state[2]-1] == problem$table[state[1], state[2]]){
-        return(FALSE)
-      }else{
-        if (to.string(state) %in% problem$left){
-          return (FALSE)
-        }else{
-          state2 <- c(state[1], state[2]-1)
-          if (to.string(state2) %in% problem$right){
-            return (FALSE)
-          }
-        }
-      }
+    if (l1 == FALSE && l2 == FALSE && l3==FALSE && l4== FALSE){
       return (TRUE)
-    } 
-    
-    
-    # l1 <-1>=state[2] #6,1
-    # l2 <-problem$table[state[1], state[2]-1] == problem$table[state[1], state[2]]
-    # l3 <-to.string(state) %in% problem$left #6,1
-    # if (state[2] != 1){
-    #   state2 <- c(state[1], state[2]-1) #6,0 #Out of bounds
-    #   l4 <-to.string(state2) %in% problem$right
-    # }else{l4 <- FALSE}
-    # 
-    # if (l1 && l2 && l3 && l4) return(FALSE)
-
-    # #Borde #OK
-    # if(1>=state[2]) return(FALSE)
-    # #Pies #OK
-    # if(problem$table[state[1], state[2]-1] == problem$table[state[1], state[2]]) return (FALSE)
-    # #Barreras #OK
-    # if (to.string(state) %in% problem$left) return (FALSE)
-    # state2 <- c(state[1], state[2]-1) #Una posicion a la izquierda
-    # if (to.string(state2) %in% problem$right) return (FALSE) #Hay que restarle 1 ya que la comprobacion se hace desde la casilla de la izquierda
+    } else{
+      return(FALSE)
+    }
   }
 
+
   # DERECHA
-  if (action == "Right"){
+  if (action == "Right"){ #FUNCIONA Comprobado
     r1 <-problem$size[2]<=state[2]
     r2 <-problem$table[state[1],state[2]+1] == problem$table[state[1],state[2]]
     r3 <-to.string(state) %in% problem$right
@@ -92,26 +72,16 @@ is.applicable <- function (state, action, problem) {
       state2 <- c(state[1], state[2]+1)
       r4 <-to.string(state2) %in% problem$left
     }else{r4 <- FALSE}
-
-    if (r1 && r2 && r3 && r4) return(FALSE)
-
-    #Borde #OK
-    # if (problem$size[2]<=state[2]) return (FALSE) #problem$Size[2] es la columna y state [1] tambien es la columna
-    # #Pies #OK
-    # if (problem$table[state[1],state[2]+1] == problem$table[state[1],state[2]]) return (FALSE)
-    # #Barreras #OK
-    # if (to.string(state) %in% problem$right) return (FALSE)
-    # state2 <- c(state[1], state[2]+1) #Una posicion a la derecha
-    # if (to.string(state2) %in% problem$left) return (FALSE)
+    if (r1 == FALSE && r2 == FALSE && r3==FALSE && r4== FALSE){
+      return (TRUE)
+    } else{
+      return(FALSE)
+    }
   }
 
-  # ABAJO #Corregir mañana
-  if (action == "Down"){
-    
   
-
-      
-      
+  # ABAJO
+  if (action == "Down"){ #FUNCIONA Comprobado
     d1 <-1>=state[1]
     d2 <-problem$table[state[1]-1, state[2]] == problem$table[state[1], state[2]]
     d3 <-to.string(state) %in% problem$down
@@ -120,57 +90,28 @@ is.applicable <- function (state, action, problem) {
       d4 <-to.string(state2) %in% problem$top
     }else{d4 <- FALSE}
 
-    if (d1 && d2 && d3 && d4) return(FALSE)
-
-    # #Borde  #OK
-    # if (1>=state[1]) return (FALSE)
-    # #Pies  #OK
-    # if (problem$table[state[1]-1, state[2]] == problem$table[state[1], state[2]]) return (FALSE)
-    # #Barreras #OK
-    # if (to.string(state) %in% problem$down) return (FALSE)
-    # state2 <- c(state[1]-1, state[2])
-    # if (to.string(state2) %in% problem$top) return (FALSE)
-  }
-
-  #ARRIBA #Corregir mañana
-  if (action == "Up"){
-
-    if (problem$size[1]<=state[1]){
-      return (FALSE)
-    }else{
-      if (problem$table[state[1]+1, state[2]] == problem$table[state[1], state[2]]){
-        return(FALSE)
-      }else{
-        if (to.string(state) %in% problem$top){
-          return(FALSE)
-        }else{
-          state2 <- c(state[1]+1, state[2])
-          if (to.string(state2) %in% problem$down){
-            return (FALSE)
-          }
-        }
-      }
+    if (d1 == FALSE && d2 == FALSE && d3==FALSE && d4== FALSE){
       return (TRUE)
+    } else{
+      return(FALSE)
     }
-      
-      
-      
-    # u1 <- problem$size[1]<=state[1]
-    # u2 <- problem$table[state[1]+1, state[2]] == problem$table[state[1], state[2]]
-    # u3 <- to.string(state) %in% problem$top
-    # if (problem$size[1]!=state[1]){
-    #   state2 <- c(state[1]+1, state[2])
-    #   u4 <-to.string(state2) %in% problem$down
-    # }else{u4 <- FALSE}
-
-  #   #Borde # OK
-  #   if (problem$size[1]<=state[1]) return (FALSE) #PREGUNTAR CUAL ES el limite real en el problema
-  #   #Pies
-  #   if (problem$table[state[1]+1, state[2]] == problem$table[state[1], state[2]]) return (FALSE)
-  #   #Barreras #OK
-  #   if (to.string(state) %in% problem$top) return (FALSE)
-  #   state2 <- c(state[1]+1, state[2])
-  #   if (to.string(state2) %in% problem$down) return (FALSE)
+  }
+ 
+  #ARRIBA 
+  if (action == "Up"){ #FUNCIONA comprobado
+    u1 <- problem$size[1]<=state[1]
+    u2 <- problem$table[state[1]+1, state[2]] == problem$table[state[1], state[2]]
+    u3 <- to.string(state) %in% problem$top
+    if (problem$size[1]!=state[1]){
+      state2 <- c(state[1]+1, state[2])
+      u4 <-to.string(state2) %in% problem$down
+    }else{u4 <- FALSE}
+    
+    if (u1 == FALSE && u2 == FALSE && u3==FALSE && u4== FALSE){
+      return (TRUE)
+    } else{
+      return(FALSE)
+    }
     }
 
   return(result)
