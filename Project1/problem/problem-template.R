@@ -133,8 +133,6 @@ effect <- function (state, action, problem) {
   return (result)
 }
 
-effect(c(4,4), "Up", problem)
-
 # Analyzes if a state is final or not
 is.final.state <- function (state, final_state, problem) { 
   result <- FALSE # Default value is FALSE.

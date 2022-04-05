@@ -1,6 +1,6 @@
 # =======================================================================
-# Group Name: Group 15
-# Students: Iñigo de Dios, Alexandru Gabriel Nitu
+# Group Name:
+# Students:
 # =======================================================================
 
 # Clear environment and console
@@ -11,7 +11,6 @@ graphics.off()
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 #Import the libraries needed to display the results
-#install.packages("kableExtra")
 library(kableExtra)
 library(magrittr)
 
@@ -23,14 +22,14 @@ source("../algorithms/blind/depth-limited-search.R")
 source("../algorithms/blind/iterative-deepening-search.R")
 source("../algorithms/informed/greedy-best-first-search.R")
 source("../algorithms/informed/uniform-cost-search.R")
-source("../problem/problem-template.R")
+source("../problem/p-hub-problem.R")
+
 
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
 
-# ADD YOUR CODE HERE TO INITIALIZE YOUR PROBLEM AD INCLUDE PROBLEM DEFINITION FILE
-problem <- initialize.problem("../data/feet-maze-1b.txt") 
-
+# ADD YOUR CODE HERE TO INITIALIZE YOUR PROBLEM AND INCLUDE PROBLEM DEFINITION FILE
+problem <- initialize.problem("../data/AP40.txt", 2) 
 
 bfs_ts <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000)   
 bfs_gs <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000, graph_search = TRUE)
