@@ -16,6 +16,7 @@ source("../algorithms/informed/hill-climbing-search.R")
 source("../algorithms/informed/random-restart-hill-climbing-search.R")
 source("../algorithms/informed/local-beam-search.R")
 
+
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
 
@@ -110,15 +111,24 @@ test.local.beam.search <- function(problem, beams, max_iterations, filename, p){
 }
 
 bestSolution <- function (results_df){
-  
+  bestSolution <- results_df [sort(results_df$Evaluation),]
+  return(bestSolution[1,])#Si no funciona poner [1]
 }
 
 avgSolution <- function (results_df){
-  
+  for (i in 1:length(results_df$Evaluation)){
+    suma = suma +  results_df$Evaluation[i]
+  }
+  resultado = suma/length(results_df$Evaluation)
+  return (resultado)
 }
 
 avgTimeSolution <- function (results_df){
-  
+  for (i in 1:length(results_df$Runtime)){
+    suma = suma +  results_df$Runtime[i]
+  }
+  resultado = suma/length(results_df$Runtime)
+  return (resultado)
 }
 
 
