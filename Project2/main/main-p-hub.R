@@ -30,7 +30,7 @@ random.restart.hill.climbing <- function(filename, p, times) {
     results[[i]] <- random.restart.hill.climbing.search(problem[[i]])
   }
   
-  results_df <- single.analyze.results(results, problem)
+  results_df <- single.analyze.results(results, problem) #Preguntar
   
   print(paste0("Best evaluation: ", round(min(results_df$Evaluation), 2), 
                " - Mean: ", round(mean(results_df$Evaluation), 2), 
@@ -109,21 +109,76 @@ test.local.beam.search <- function(problem, beams, max_iterations, filename, p){
   return(results_df)
 }
 
+bestSolution <- function (results_df){
+  
+}
+
+avgSolution <- function (results_df){
+  
+}
+
+avgTimeSolution <- function (results_df){
+  
+}
+
 
 # Clear console
 cat("\014")
 graphics.off()
 
+# Test Hill climbing
 file        <- "../data/p-hub/AP40.txt"
 p           <- 4
 times       <- 10
 results_df  <- test.hill.climbing(file, p, times)
+
+file        <- "../data/p-hub/AP40.txt"
+p           <- 4
+times       <- 20
+results_df  <- test.hill.climbing(file, p, times)
+
+file        <- "../data/p-hub/AP40.txt"
+p           <- 4
+times       <- 50
+results_df  <- test.hill.climbing(file, p, times)
+
 # Print results in an HTML Table
 kable_material(kbl(results_df, caption = "p-hub AP40"),  c("striped", "hover", "condensed", "responsive"))
 
+
+#Random restart hill climbing
 file        <- "../data/p-hub/AP100.txt"
 p           <- 3
 times       <- 10
-results_df  <- test.hill.climbing(file, p, times)
+results_df  <- random.restart.hill.climbing(file, p, times)
+
+file        <- "../data/p-hub/AP100.txt"
+p           <- 3
+times       <- 20
+results_df  <- random.restart.hill.climbing(file, p, times)
+
+file        <- "../data/p-hub/AP100.txt"
+p           <- 3
+times       <- 50
+results_df  <- random.restart.hill.climbing(file, p, times)
+
 # Print results in an HTML Table
 kable_material(kbl(results_df, caption = "p-hub AP100"),  c("striped", "hover", "condensed", "responsive"))
+
+#Local beam seach
+file        <- "../data/p-hub/AP40.txt"
+p           <- 3
+beams       <- 3
+results_df  <- test.local.beam.search(file, p, beams) 
+## Poner metodos de mejor solucion, sol media y demas
+
+file        <- "../data/p-hub/AP40.txt"
+p           <- 3
+beams       <- 5
+results_df  <- test.local.beam.search(file, p, beams) 
+
+
+file        <- "../data/p-hub/AP40.txt"
+p           <- 3
+beams       <- 10
+results_df  <- test.local.beam.search(file, p, beams) 
