@@ -2,7 +2,7 @@ local.beam.search = function(problem,
                                 max_iterations = 1000, 
                                 count_print = 100, 
                                 trace = FALSE,
-                                beams = 3) {
+                                beams) {
   
   name_method      <- paste0("Local Beam Search")
   state_initial    <- problem$state_initial
@@ -12,6 +12,9 @@ local.beam.search = function(problem,
     state_initial[[i]] <- a(c(1:problem$size), problem&p)
   }
   
+  #Node current generalizarla a beams
+  #for de 1 a 4 creando una lista 
+  # Dos for
   
   actions_possible <- problem$actions_possible
   

@@ -3,6 +3,8 @@ random.climbing.search = function(problem,
                                 count_print = 100, 
                                 trace = FALSE) {
   
+  #meter un bucle donde invoquemos al hill climpbing y sacar al mejor. El for por cada iteracion. Un for
+  
   name_method      <- paste0("Random Restart Hill Climbing Search")
   state_initial    <- problem$state_initial
   actions_possible <- problem$actions_possible

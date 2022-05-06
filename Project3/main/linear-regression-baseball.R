@@ -12,6 +12,8 @@ library(lattice)
 library(caret)
 library(RKEEL)
 
+EDITAR ESTO. CUANDO SE CREE EL PUNTO DE REGRESION LINEAL. Y REPETIR 10 VECES
+
 # Read data from CSV
 data <- read.keel("../data/baseball.dat")
 # Convert string to integer
