@@ -13,7 +13,7 @@ library(magrittr)
 # Include algorithm functions
 source("../algorithms/blind/expand-node.R")
 source("../algorithms/informed/hill-climbing-search.R")
-source("../algorithms/informed/random-restart-hill-climbing.R")
+source("../algorithms/informed/random-restart-hill-climbing-search.R")
 source("../algorithms/informed/local-beam-search.R")
 
 
@@ -24,12 +24,9 @@ source("../algorithms/results-analysis/analyze-results.R")
 source("../problem/p-hub-problem.R")
 
 
-
-
 # Executes hill climbing search and return the results
 execute.hill.climbing <- function(filename, p) {
-  filename
-  p
+  
   # Initialize problem
   problem <- initialize.problem(p = p, filename = filename)
   # Execute hill climbing

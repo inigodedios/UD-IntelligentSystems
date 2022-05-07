@@ -1,14 +1,18 @@
 # This function must return a list with the information needed to solve the problem.
 # (Depending on the problem, it should receive or not parameters)
+
+filename <- "../Project2/data/p-hub/AP40.txt"
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 initialize.problem <- function(filename, p) {
   problem <- list() # Default value is an empty list.
   #P = number of hubs
   problem$p         <- p
   problem$name      <- paste0("p-Hub - [", filename, " - p=", problem$p, "]")
   #Size is the number of airports
-  problem$size      <- as.numeric(unlist(read.csv(filename, header=FALSE, nrows=1)))
+  problem$size      <- as.numeric(unlist(read.csv(filename, header=TRUE, nrows=1)))
   #Distances data.frame
-  problem$distances <- read.csv(filename, header=FALSE, skip=problem$size+2, dec=".", sep=" ")
+  problem$distances <- read.csv(filename, header=TRUE, skip=problem$size+2, dec=".", sep=" ")
 
   # Initial state is generated at random
   problem$state_initial <- sample(c(1:problem$size), problem$p)

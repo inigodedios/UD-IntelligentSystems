@@ -4,7 +4,7 @@ source("../algorithms/results-analysis/analyze-results.R")
 
 
 
-random.restart.hill.climbing= function(problem,
+random.restart.hill.climbing.search= function(problem,
                                 max_iterations = 1000, 
                                 count_print = 100, 
                                 trace = FALSE) {
