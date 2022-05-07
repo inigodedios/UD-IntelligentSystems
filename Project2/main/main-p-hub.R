@@ -6,14 +6,14 @@ graphics.off()
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 #Import the libraries needed to display the results
-install.packages("kableExtra")
-library(kableExtra)
+##install.packages("kableExtra")
+#library(kableExtra)
 library(magrittr)
 
 # Include algorithm functions
 source("../algorithms/blind/expand-node.R")
 source("../algorithms/informed/hill-climbing-search.R")
-source("../algorithms/informed/random-restart-hill-climbing-search.R")
+source("../algorithms/informed/random-restart-hill-climbing.R")
 source("../algorithms/informed/local-beam-search.R")
 
 
@@ -23,33 +23,13 @@ source("../algorithms/results-analysis/analyze-results.R")
 # Include the problem
 source("../problem/p-hub-problem.R")
 
-random.restart.hill.climbing <- function(filename, p, times) {
-  results <- vector(mode = "list", length = times)
-  problem <- vector(mode = "list", length = times)
-  for (i in 1:times) {
-    problem[[i]] <- initialize.problem(filename, p)
-    results[[i]] <- random.restart.hill.climbing.search(problem[[i]])
-  }
-  
-  results_df <- single.analyze.results(results, problem) #Preguntar
-  
-  print(paste0("Best evaluation: ", round(min(results_df$Evaluation), 2), 
-               " - Mean: ", round(mean(results_df$Evaluation), 2), 
-               " - SD: ", round(sd(results_df$Evaluation), 2)), quote = FALSE)
-  print(paste0("Best runtime: ", round(min(results_df$Runtime), 2), 
-               " - Mean: ", round(mean(results_df$Runtime), 2), 
-               " - SD: ", round(sd(results_df$Runtime), 2)), quote = FALSE)
-  return(results_df)
-}
-
-
-
-#falta el metodo que busque el mejor
 
 
 
 # Executes hill climbing search and return the results
 execute.hill.climbing <- function(filename, p) {
+  filename
+  p
   # Initialize problem
   problem <- initialize.problem(p = p, filename = filename)
   # Execute hill climbing
@@ -136,21 +116,25 @@ avgTimeSolution <- function (results_df){
 cat("\014")
 graphics.off()
 
-# Test Hill climbing
+# Modification Hill climbing
+
 file        <- "../data/p-hub/AP40.txt"
 p           <- 4
 times       <- 10
 results_df  <- test.hill.climbing(file, p, times)
+resultsHh10 <- bestSolution(results_df)
 
 file        <- "../data/p-hub/AP40.txt"
 p           <- 4
 times       <- 20
 results_df  <- test.hill.climbing(file, p, times)
+resultsHh20 <- bestSolution(results_df)
 
 file        <- "../data/p-hub/AP40.txt"
 p           <- 4
 times       <- 50
 results_df  <- test.hill.climbing(file, p, times)
+resultsHh50 <- bestSolution(results_df)
 
 # Print results in an HTML Table
 kable_material(kbl(results_df, caption = "p-hub AP40"),  c("striped", "hover", "condensed", "responsive"))
@@ -160,17 +144,21 @@ kable_material(kbl(results_df, caption = "p-hub AP40"),  c("striped", "hover", "
 file        <- "../data/p-hub/AP100.txt"
 p           <- 3
 times       <- 10
-results_df  <- random.restart.hill.climbing(file, p, times)
+results_df  <- modification.random.restart.hill.climbing(file, p, times)
+resultsRhh10 <- bestSolution(results_df)
+
 
 file        <- "../data/p-hub/AP100.txt"
 p           <- 3
 times       <- 20
-results_df  <- random.restart.hill.climbing(file, p, times)
+results_df  <- modification.random.restart.hill.climbing(file, p, times)
+resultsRhh20 <- bestSolution(results_df)
 
 file        <- "../data/p-hub/AP100.txt"
 p           <- 3
 times       <- 50
-results_df  <- random.restart.hill.climbing(file, p, times)
+results_df  <- modification.random.restart.hill.climbing(file, p, times)
+resultsRhh50 <- bestSolution(results_df)
 
 # Print results in an HTML Table
 kable_material(kbl(results_df, caption = "p-hub AP100"),  c("striped", "hover", "condensed", "responsive"))
@@ -180,15 +168,24 @@ file        <- "../data/p-hub/AP40.txt"
 p           <- 3
 beams       <- 3
 results_df  <- test.local.beam.search(file, p, beams) 
+resultsLbs3  <- bestSolution(results_df)
 ## Poner metodos de mejor solucion, sol media y demas
 
 file        <- "../data/p-hub/AP40.txt"
 p           <- 3
 beams       <- 5
 results_df  <- test.local.beam.search(file, p, beams) 
-
+resultsLbs5 <- bestSolution(results_df)
 
 file        <- "../data/p-hub/AP40.txt"
 p           <- 3
 beams       <- 10
 results_df  <- test.local.beam.search(file, p, beams) 
+resultsLbs10 <- bestSolution(results_df)
+
+totalResult      <- rbind(resultsHh10,resultsHh20,resultsHh50,resultsRhh10,resultsRhh20,
+                     resultsRhh50,resultsLbs3,resultsLbs5,resultsLbs10)
+
+
+# Print results in an HTML Table
+kable_material(kbl(totalResult, caption = "p-hub AP100"),  c("striped", "hover", "condensed", "responsive"))

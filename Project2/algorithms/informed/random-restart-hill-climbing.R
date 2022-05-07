@@ -1,10 +1,17 @@
-random.climbing.search = function(problem,
+# Include functions for data analysis and result plot
+
+source("../algorithms/results-analysis/analyze-results.R")
+
+
+
+random.restart.hill.climbing= function(problem,
                                 max_iterations = 1000, 
                                 count_print = 100, 
                                 trace = FALSE) {
   
   #meter un bucle donde invoquemos al hill climpbing y sacar al mejor. El for por cada iteracion. Un for
-  
+
+
   name_method      <- paste0("Random Restart Hill Climbing Search")
   state_initial    <- problem$state_initial
   actions_possible <- problem$actions_possible
@@ -102,3 +109,24 @@ random.climbing.search = function(problem,
   
   return(result)
 }
+
+modification.random.restart.hill.climbing <- function(filename, p, iterations){
+  results <- vector(mode = "list", length = iterations)
+  problem <- vector(mode = "list", length = iterations)
+  for (i in 1:max_iterations) {
+    problem[[i]] <- initialize.problem(filename, p)
+    results[[i]] <- random.restart.hill.climbing.search(problem[[i]]) 
+    
+    results_df <- single.analyze.results(results, problems)
+    
+    print(paste0("Best evaluation: ", round(min(results_df$Evaluation), 2),
+                 " - Mean: ", round(mean(results_df$Evaluation), 2),
+                 " - SD: ", round(sd(results_df$Evaluation), 2)), quote = FALSE)
+    print(paste0("Best runtime: ", round(min(results_df$Runtime), 2),
+                 " - Mean: ", round(mean(results_df$Runtime), 2),
+                 " - SD: ", round(sd(results_df$Runtime), 2)), quote = FALSE)
+    
+    return(results_df)
+  }
+}
+

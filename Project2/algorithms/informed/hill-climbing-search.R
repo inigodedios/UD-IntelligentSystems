@@ -100,3 +100,4 @@ hill.climbing.search = function(problem,
   
   return(result)
 }
+
