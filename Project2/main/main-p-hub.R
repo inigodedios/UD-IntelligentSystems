@@ -88,8 +88,8 @@ test.local.beam.search <- function(problem, beams, max_iterations, filename, p){
 }
 
 bestSolution <- function (results_df){
-  bestSolution <- results_df [sort(results_df$Evaluation),]
-  return(bestSolution[1,])#Si no funciona poner [1]
+  bestSolution <- results_df [order(results_df$Evaluation),]
+  return(bestSolution[1])#Si no funciona poner [1]
 }
 
 avgSolution <- function (results_df){
@@ -115,10 +115,11 @@ graphics.off()
 
 # Modification Hill climbing
 
-file        <- "../data/p-hub/AP40.txt"
+file        <- "/Users/ini/Library/Mobile Documents/com~apple~CloudDocs/3º Carrera/Semestre 2/Sistemas Inteligentes/Proyectos/Project2/data/AP40.txt"
 p           <- 4
 times       <- 10
 results_df  <- test.hill.climbing(file, p, times)
+results_df
 resultsHh10 <- bestSolution(results_df)
 
 file        <- "../data/p-hub/AP40.txt"

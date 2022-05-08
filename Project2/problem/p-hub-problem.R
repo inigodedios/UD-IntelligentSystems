@@ -10,9 +10,9 @@ initialize.problem <- function(filename, p) {
   problem$p         <- p
   problem$name      <- paste0("p-Hub - [", filename, " - p=", problem$p, "]")
   #Size is the number of airports
-  problem$size      <- as.numeric(unlist(read.csv(filename, header=TRUE, nrows=1)))
+  problem$size      <- as.numeric(unlist(read.csv(filename, header=FALSE, nrows=1)))
   #Distances data.frame
-  problem$distances <- read.csv(filename, header=TRUE, skip=problem$size+2, dec=".", sep=" ")
+  problem$distances <- read.csv(filename, header=FALSE, skip=problem$size+2, dec=".", sep=" ")
 
   # Initial state is generated at random
   problem$state_initial <- sample(c(1:problem$size), problem$p)
