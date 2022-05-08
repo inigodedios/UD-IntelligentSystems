@@ -112,21 +112,22 @@ random.restart.hill.climbing.search= function(problem,
 
 modification.random.restart.hill.climbing <- function(filename, p, iterations){
   results <- vector(mode = "list", length = iterations)
-  problem <- vector(mode = "list", length = iterations)
-  for (i in 1:max_iterations) {
-    problem[[i]] <- initialize.problem(filename, p)
-    results[[i]] <- random.restart.hill.climbing.search(problem[[i]]) 
-    
-    results_df <- single.analyze.results(results, problems)
-    
-    print(paste0("Best evaluation: ", round(min(results_df$Evaluation), 2),
-                 " - Mean: ", round(mean(results_df$Evaluation), 2),
-                 " - SD: ", round(sd(results_df$Evaluation), 2)), quote = FALSE)
-    print(paste0("Best runtime: ", round(min(results_df$Runtime), 2),
-                 " - Mean: ", round(mean(results_df$Runtime), 2),
-                 " - SD: ", round(sd(results_df$Runtime), 2)), quote = FALSE)
-    
-    return(results_df)
+  problems <- vector(mode = "list", length = iterations)
+  for (i in 1:iterations) {
+    problems[[i]] <- initialize.problem(filename, p)
+    results[[i]] <- random.restart.hill.climbing.search(problems[[i]])
   }
+  
+  results_df <- single.analyze.results(results, problems)
+  
+  print(paste0("Best evaluation: ", round(min(results_df$Evaluation), 2),
+               " - Mean: ", round(mean(results_df$Evaluation), 2),
+               " - SD: ", round(sd(results_df$Evaluation), 2)), quote = FALSE)
+  print(paste0("Best runtime: ", round(min(results_df$Runtime), 2),
+               " - Mean: ", round(mean(results_df$Runtime), 2),
+               " - SD: ", round(sd(results_df$Runtime), 2)), quote = FALSE)
+  
+  return(results_df)
 }
+
 

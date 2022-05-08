@@ -1,9 +1,8 @@
 # This function must return a list with the information needed to solve the problem.
 # (Depending on the problem, it should receive or not parameters)
 
-filename <- "../Project2/data/p-hub/AP40.txt"
+#filename <- "../data/p-hub/AP40.txt"
 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 initialize.problem <- function(filename, p) {
   problem <- list() # Default value is an empty list.
   #P = number of hubs

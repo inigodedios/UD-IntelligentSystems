@@ -111,6 +111,7 @@ file        <- "../data/AP40.txt"
 p           <- 4
 times       <- 20
 results_df  <- test.hill.climbing(file, p, times)
+results_df
 bestSolHc20 <- bestSolution(results_df)
 
 
@@ -118,6 +119,7 @@ file        <- "../data/AP40.txt"
 p           <- 4
 times       <- 50
 results_df  <- test.hill.climbing(file, p, times)
+results_df
 bestSolHc50 <- bestSolution(results_df)
 
 
