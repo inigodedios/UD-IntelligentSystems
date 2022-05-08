@@ -150,7 +150,7 @@ kable_material(kbl(results_df, caption = "p-hub AP40"),  c("striped", "hover", "
 
 
 #Random restart hill climbing
-file        <- "../data/p-hub/AP100.txt"
+file        <- "../data/AP100.txt"
 p           <- 3
 times       <- 10
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
@@ -160,7 +160,7 @@ avgSolRrhc10  <- avgSolution(results_df)
 avgTSolRrhc10 <- avgTimeSolution(results_df)
 
 
-file        <- "../data/p-hub/AP100.txt"
+file        <- "../data//AP100.txt"
 p           <- 3
 times       <- 20
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
@@ -170,7 +170,7 @@ bestSolRrhc20 <- bestSolution(results_df)
 avgSolRrhc20  <- avgSolution(results_df)
 avgTSolRrhc20 <- avgTimeSolution(results_df)
 
-file        <- "../data/p-hub/AP100.txt"
+file        <- "../data/AP100.txt"
 p           <- 3
 times       <- 50
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
@@ -184,7 +184,7 @@ avgTSolRrhc50 <- avgTimeSolution(results_df)
 kable_material(kbl(results_df, caption = "p-hub AP100"),  c("striped", "hover", "condensed", "responsive"))
 
 #Local beam seach
-file        <- "../data/p-hub/AP40.txt"
+file        <- "../data/AP40.txt"
 p           <- 3
 beams       <- 3
 results_df  <- test.local.beam.search(file, p, beams) 
@@ -193,7 +193,7 @@ bestSolLbs3 <- bestSolution(results_df)
 avgSolLbs3  <- avgSolution(results_df)
 avgTSolLbs3 <- avgTimeSolution(results_df)
 
-file        <- "../data/p-hub/AP40.txt"
+file        <- "../data/AP40.txt"
 p           <- 3
 beams       <- 5
 results_df  <- test.local.beam.search(file, p, beams) 
@@ -202,7 +202,7 @@ bestSolLbs5 <- bestSolution(results_df)
 avgSolLbs5  <- avgSolution(results_df)
 avgTSolLbs5 <- avgTimeSolution(results_df)
 
-file        <- "../data/p-hub/AP40.txt"
+file        <- "../data/AP40.txt"
 p           <- 3
 beams       <- 10
 results_df  <- test.local.beam.search(file, p, beams) 
