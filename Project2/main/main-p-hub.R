@@ -6,7 +6,7 @@ graphics.off()
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 #Import the libraries needed to display the results
-##install.packages("kableExtra")
+#install.packages("kableExtra")
 #library(kableExtra)
 library(magrittr)
 
@@ -94,6 +94,7 @@ bestSolution <- function (results_df){
 
 avgSolution <- function (results_df){
   for (i in 1:length(results_df$Evaluation)){
+    suma <- 0
     suma = suma +  results_df$Evaluation[i]
   }
   resultado = suma/length(results_df$Evaluation)
@@ -102,6 +103,7 @@ avgSolution <- function (results_df){
 
 avgTimeSolution <- function (results_df){
   for (i in 1:length(results_df$Runtime)){
+    suma <- 0
     suma = suma +  results_df$Runtime[i]
   }
   resultado = suma/length(results_df$Runtime)
@@ -109,30 +111,39 @@ avgTimeSolution <- function (results_df){
 }
 
 
+
+
 # Clear console
 cat("\014")
 graphics.off()
 
-# Modification Hill climbing
+#Hill climbing
 
-file        <- "/Users/ini/Library/Mobile Documents/com~apple~CloudDocs/3º Carrera/Semestre 2/Sistemas Inteligentes/Proyectos/Project2/data/AP40.txt"
+file        <- "../data/AP40.txt"
 p           <- 4
 times       <- 10
 results_df  <- test.hill.climbing(file, p, times)
 results_df
-resultsHh10 <- bestSolution(results_df)
+bestSolHc10 <- bestSolution(results_df)
+avgSolHc10  <- avgSolution(results_df)
+avgTSolHc10 <- avgTimeSolution(results_df)
 
-file        <- "../data/p-hub/AP40.txt"
+
+file        <- "../data/AP40.txt"
 p           <- 4
 times       <- 20
 results_df  <- test.hill.climbing(file, p, times)
-resultsHh20 <- bestSolution(results_df)
+bestSolHc20 <- bestSolution(results_df)
+avgSolHc20  <- avgSolution(results_df)
+avgTSolHc20 <- avgTimeSolution(results_df)
 
-file        <- "../data/p-hub/AP40.txt"
+file        <- "../data/AP40.txt"
 p           <- 4
 times       <- 50
 results_df  <- test.hill.climbing(file, p, times)
-resultsHh50 <- bestSolution(results_df)
+bestSolHc50 <- bestSolution(results_df)
+avgSolHc50  <- avgSolution(results_df)
+avgTSolHc50 <- avgTimeSolution(results_df)
 
 # Print results in an HTML Table
 kable_material(kbl(results_df, caption = "p-hub AP40"),  c("striped", "hover", "condensed", "responsive"))
@@ -143,7 +154,10 @@ file        <- "../data/p-hub/AP100.txt"
 p           <- 3
 times       <- 10
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
-resultsRhh10 <- bestSolution(results_df)
+resultsRrhc10 <- bestSolution(results_df)
+bestSolRrhc10 <- bestSolution(results_df)
+avgSolRrhc10  <- avgSolution(results_df)
+avgTSolRrhc10 <- avgTimeSolution(results_df)
 
 
 file        <- "../data/p-hub/AP100.txt"
@@ -151,12 +165,20 @@ p           <- 3
 times       <- 20
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
 resultsRhh20 <- bestSolution(results_df)
+resultsRrhc20 <- bestSolution(results_df)
+bestSolRrhc20 <- bestSolution(results_df)
+avgSolRrhc20  <- avgSolution(results_df)
+avgTSolRrhc20 <- avgTimeSolution(results_df)
 
 file        <- "../data/p-hub/AP100.txt"
 p           <- 3
 times       <- 50
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
 resultsRhh50 <- bestSolution(results_df)
+resultsRrhc50 <- bestSolution(results_df)
+bestSolRrhc50 <- bestSolution(results_df)
+avgSolRrhc50  <- avgSolution(results_df)
+avgTSolRrhc50 <- avgTimeSolution(results_df)
 
 # Print results in an HTML Table
 kable_material(kbl(results_df, caption = "p-hub AP100"),  c("striped", "hover", "condensed", "responsive"))
@@ -166,21 +188,30 @@ file        <- "../data/p-hub/AP40.txt"
 p           <- 3
 beams       <- 3
 results_df  <- test.local.beam.search(file, p, beams) 
-resultsLbs3  <- bestSolution(results_df)
-## Poner metodos de mejor solucion, sol media y demas
+resultsLbs3 <- bestSolution(results_df)
+bestSolLbs3 <- bestSolution(results_df)
+avgSolLbs3  <- avgSolution(results_df)
+avgTSolLbs3 <- avgTimeSolution(results_df)
 
 file        <- "../data/p-hub/AP40.txt"
 p           <- 3
 beams       <- 5
 results_df  <- test.local.beam.search(file, p, beams) 
 resultsLbs5 <- bestSolution(results_df)
+bestSolLbs5 <- bestSolution(results_df)
+avgSolLbs5  <- avgSolution(results_df)
+avgTSolLbs5 <- avgTimeSolution(results_df)
 
 file        <- "../data/p-hub/AP40.txt"
 p           <- 3
 beams       <- 10
 results_df  <- test.local.beam.search(file, p, beams) 
 resultsLbs10 <- bestSolution(results_df)
+bestSolLbs10 <- bestSolution(results_df)
+avgSolLbs10  <- avgSolution(results_df)
+avgTSolLbs10 <- avgTimeSolution(results_df)
 
+#Esto esta mal
 totalResult      <- rbind(resultsHh10,resultsHh20,resultsHh50,resultsRhh10,resultsRhh20,
                      resultsRhh50,resultsLbs3,resultsLbs5,resultsLbs10)
 
