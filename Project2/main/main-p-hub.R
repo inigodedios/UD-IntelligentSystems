@@ -59,18 +59,20 @@ test.hill.climbing <- function(file, p, times) {
 }
 
 
-execute.local.beam.search <- function(problem, beams, max_iterations){ #!
+execute.local.beam.search <- function(problem){ #!
   return (local.beam.search(problem = problem))
 }
 
-test.local.beam.search <- function(problem, beams, max_iterations, filename, p){
+test.local.beam.search <- function(filename, p, beams){
   # Execute hill climbing 'n' times
-  results <- vector(mode = "list", length = beams)
+  results <- vector(mode = "list", length = 1)  
   
   # Initialize a problem instance for the analysis
-  filename <- file #preguntar
-  p <- p #?
   problem <- initialize.problem(filename = filename, p = p)
+  
+  
+  #El mejor resultado, ejecuta local.beam.search
+  results[[1]] <- execute.local.beam.search(problem)
   
   # Analyze results
   results_df <- local.analyze.results(results, problem)

@@ -3,14 +3,14 @@ local.beam.search = function(problem,
                                 max_iterations = 1000, 
                                 count_print = 100, 
                                 trace = FALSE,
-                                beams) {
+                                beams = 3) {
   
   name_method      <- paste0("Local Beam Search")
   state_initial    <- list(problem$state_initial)
   
   for (i in 1:beams){
     #state_initial -> size, n aeropuertos
-    state_initial[[i]] <- a(c(1:problem$size), problem$p)
+    state_initial[[i]] <- sample(c(1:problem$size), problem$p)
   }
   
   #Node current generalizarla a beams
@@ -125,3 +125,4 @@ local.beam.search = function(problem,
   
   return(result)
 }
+
