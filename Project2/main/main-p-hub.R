@@ -67,11 +67,9 @@ test.local.beam.search <- function(problem, beams, max_iterations, filename, p){
   # Execute hill climbing 'n' times
   results <- vector(mode = "list", length = beams)
   
-  for (i in 1:times) {
-    results[[i]] <- execute.local.beam.search(problem)
-  }
-  
   # Initialize a problem instance for the analysis
+  filename <- file #preguntar
+  p <- p #?
   problem <- initialize.problem(filename = filename, p = p)
   
   # Analyze results
@@ -129,24 +127,27 @@ kable_material(kbl(results_df, caption = "p-hub AP40"),  c("striped", "hover", "
 
 #Random restart hill climbing
 file        <- "../data/AP100.txt"
-p           <- 3
+p           <- 4
 times       <- 10
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
+results_df
 resultsRrhc10 <- bestSolution(results_df)
 
 
 
 file        <- "../data//AP100.txt"
-p           <- 3
+p           <- 4
 times       <- 20
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
+results_df
 resultsRrhc20 <- bestSolution(results_df)
 
 
 file        <- "../data/AP100.txt"
-p           <- 3
+p           <- 4
 times       <- 50
 results_df  <- modification.random.restart.hill.climbing(file, p, times)
+results_df
 resultsRhh50 <- bestSolution(results_df)
 
 
